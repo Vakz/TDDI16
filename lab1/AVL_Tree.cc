@@ -272,10 +272,9 @@ remove(const Comparable& x, Node_Pointer& t)
     }
     else
     {
-      Comparable largest = find_min(t->right)->element;
-      std::cout << largest << std::endl;
-      remove(largest, t->right);
-      t->element = largest;
+      Comparable smallest = find_min(t->right)->element;
+      remove(smallest, t->right);
+      t->element = smallest;
 
       if (node_height(t->right) - node_height(t->left) == 2)
       {
