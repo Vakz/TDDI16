@@ -224,33 +224,10 @@ remove(const Comparable& x, Node_Pointer& t)
   if (x < t->element)
   {
     remove(x, t->left);
-
-    if (node_height(t->right) - node_height(t->left) == 2)
-    {
-      if (t->right->element > x)
-      {
-        single_rotate_with_right_child(t);
-      }
-      else {
-        double_rotate_with_right_child(t);
-      }
-    }
   }
   else if (x > t->element)
   {
     remove(x, t->right);
-
-    if (node_height(t->left) - node_height(t->right) == 2)
-    {
-      if (x < t->left->element)
-      {
-        single_rotate_with_left_child(t);
-      }
-      else
-      {
-        double_rotate_with_left_child(t);
-      }
-    }
   }
   else
   {
@@ -275,32 +252,36 @@ remove(const Comparable& x, Node_Pointer& t)
       Comparable smallest = find_min(t->right)->element;
       remove(smallest, t->right);
       t->element = smallest;
-
-      if (node_height(t->right) - node_height(t->left) == 2)
-      {
-        if (t->right->element > x)
-        {
-          single_rotate_with_right_child(t);
-        }
-        else {
-          double_rotate_with_right_child(t);
-        }
-      }
-
-      else if (node_height(t->left) - node_height(t->right) == 2)
-      {
-        if (x < t->left->element)
-        {
-          single_rotate_with_left_child(t);
-        }
-        else
-        {
-          double_rotate_with_left_child(t);
-        }
-      }
     }
   }
-  if (t != nullptr) calculate_height(t);
+
+  if (t != nullptr)
+  {
+    if (node_height(t->right) - node_height(t->left) == 2)
+    {
+      if (t->right->element > x)
+      {
+        single_rotate_with_right_child(t);
+      }
+      else {
+        double_rotate_with_right_child(t);
+      }
+    }
+
+    else if (node_height(t->left) - node_height(t->right) == 2)
+    {
+      if (x < t->left->element)
+      {
+        single_rotate_with_left_child(t);
+      }
+      else
+      {
+        double_rotate_with_left_child(t);
+      }
+    }
+
+    calculate_height(t);
+  }
 }
 
 /**
