@@ -12,9 +12,9 @@ using namespace std;
  * AVL_Tree_Node.
  */
 template<typename Comparable>
-class AVL_Tree_Node 
+class AVL_Tree_Node
 {
-   private: 
+   private:
       friend class AVL_Tree<Comparable>;
 
       AVL_Tree_Node(const Comparable& element)
@@ -34,6 +34,7 @@ class AVL_Tree_Node
 
       // The following functions are called from corresponding functions in AVL_Tree
       static void insert(const Comparable&, Node_Pointer&);
+      static void remove(const Comparable&, Node_Pointer&);
 
       static void clear(Node_Pointer&);
 
@@ -126,7 +127,7 @@ single_rotate_with_right_child(Node_Pointer& k1)
 {
    Node_Pointer k2 = k1->right;
 
-   k1->right = k2->left;  
+   k1->right = k2->left;
    k2->left = k1;
 
    k1->height = max(node_height(k1->right), node_height(k1->left)) + 1;
@@ -164,20 +165,20 @@ double_rotate_with_right_child(Node_Pointer& k3)
  */
 
 /**
- * Insert x in tree t as a new leaf. Check balance and adjust tree if needed. 
+ * Insert x in tree t as a new leaf. Check balance and adjust tree if needed.
  */
 template<typename Comparable>
 void
 AVL_Tree_Node<Comparable>::
 insert(const Comparable& x, Node_Pointer& t)
 {
-   if (t == nullptr) 
+   if (t == nullptr)
    {
       t = new Node(x);
       return;
    }
 
-   if (x < t->element) 
+   if (x < t->element)
    {
       insert(x, t->left);
 
@@ -187,24 +188,120 @@ insert(const Comparable& x, Node_Pointer& t)
 	 else
 	    double_rotate_with_left_child(t);
       else
-	 calculate_height(t); 
+	 calculate_height(t);
    }
-   else if (t->element < x) 
+   else if (t->element < x)
    {
       insert(x, t->right);
 
       if (node_height(t->right) - node_height(t->left) == 2)
-	 if (t->right->element < x)
-	    single_rotate_with_right_child(t);
-	 else
-	    double_rotate_with_right_child(t);
+	       if (t->right->element < x)
+	         single_rotate_with_right_child(t);
+	        else
+	         double_rotate_with_right_child(t);
       else
-	 calculate_height(t);
+	       calculate_height(t);
    }
-   else 
+   else
    {
       throw AVL_Tree_error("insättning: finns redan");
    }
+}
+
+/**
+ * Removes node from tree. Balances tree if necessary
+ */
+template<typename Comparable>
+void
+AVL_Tree_Node<Comparable>::
+remove(const Comparable& x, Node_Pointer& t)
+{
+  if (t == nullptr)
+  {
+    return;
+  }
+
+  if (x < t->element)
+  {
+    remove(x, t->left);
+
+    if (node_height(t->right) - node_height(t->left) == 2)
+    {
+      if (t->right->element > x)
+      {
+        single_rotate_with_right_child(t);
+      }
+      else {
+        double_rotate_with_right_child(t);
+      }
+    }
+  }
+  else if (x > t->element)
+  {
+    remove(x, t->right);
+
+    if (node_height(t->left) - node_height(t->right) == 2)
+    {
+      if (x < t->left->element)
+      {
+        single_rotate_with_left_child(t);
+      }
+      else
+      {
+        double_rotate_with_left_child(t);
+      }
+    }
+  }
+  else
+  {
+    Node_Pointer tmp = t;
+    if (t->right == nullptr && t->left == nullptr) {
+      delete t;
+      t = nullptr;
+    }
+    else if (t->right == nullptr)
+    {
+
+      t = t->left;
+
+      delete tmp;
+    }
+    else if (t->left == nullptr) {
+      t = t->right;
+      delete tmp;
+    }
+    else
+    {
+      Comparable largest = find_min(t->right)->element;
+      std::cout << largest << std::endl;
+      remove(largest, t->right);
+      t->element = largest;
+
+      if (node_height(t->right) - node_height(t->left) == 2)
+      {
+        if (t->right->element > x)
+        {
+          single_rotate_with_right_child(t);
+        }
+        else {
+          double_rotate_with_right_child(t);
+        }
+      }
+
+      else if (node_height(t->left) - node_height(t->right) == 2)
+      {
+        if (x < t->left->element)
+        {
+          single_rotate_with_left_child(t);
+        }
+        else
+        {
+          double_rotate_with_left_child(t);
+        }
+      }
+    }
+  }
+  if (t != nullptr) calculate_height(t);
 }
 
 /**
@@ -215,7 +312,7 @@ void
 AVL_Tree_Node<Comparable>::
 print(ostream& os, const Node_Pointer t)
 {
-   if (t != nullptr) 
+   if (t != nullptr)
    {
       print(os, t->left);
       os << t->element << " ";
@@ -224,7 +321,7 @@ print(ostream& os, const Node_Pointer t)
 }
 
 /**
- * Print the tree in amazingly beautiful ASCII art. 
+ * Print the tree in amazingly beautiful ASCII art.
  */
 template<typename Comparable>
 void
@@ -232,9 +329,9 @@ AVL_Tree_Node<Comparable>::
 print_tree(ostream& os, const Node_Pointer t, int depth)
 {
    if (t != nullptr) {
-      print_tree(os, t->right, depth + 1); 
+      print_tree(os, t->right, depth + 1);
 
-      if (t->right != nullptr) 
+      if (t->right != nullptr)
       {
 	 indent(os, depth);
 	 os << " /" << endl;
@@ -243,20 +340,20 @@ print_tree(ostream& os, const Node_Pointer t, int depth)
       indent(os, depth);
       os << t->element << endl;
 
-      if (t->left != nullptr) 
+      if (t->left != nullptr)
       {
 	 indent(os, depth);
 	 os << " \\" << endl;
       }
 
-      print_tree(os, t->left, depth + 1); 
+      print_tree(os, t->left, depth + 1);
    }
 }
 
 /**
  * Copy the tree.
  */
-template<typename Comparable>  
+template<typename Comparable>
 AVL_Tree_Node<Comparable>*
 AVL_Tree_Node<Comparable>::
 clone(const Node_Pointer t)
@@ -268,7 +365,7 @@ clone(const Node_Pointer t)
 }
 
 /**
- * Look for x in the tree. If found, return av pointer to the node. 
+ * Look for x in the tree. If found, return av pointer to the node.
  * Otherwise, return nullptr.
  */
 template<typename Comparable>
@@ -313,7 +410,7 @@ AVL_Tree_Node<Comparable>::
 find_max(const Node_Pointer t)
 {
    Node_Pointer p = t;
-   if (p != nullptr) 
+   if (p != nullptr)
    {
       while (p->right != nullptr)
 	 p = p->right;
@@ -329,7 +426,7 @@ void
 AVL_Tree_Node<Comparable>::
 clear(Node_Pointer& t)
 {
-   if (t != nullptr) 
+   if (t != nullptr)
    {
       clear(t->left);
       clear(t->right);
@@ -342,7 +439,7 @@ clear(Node_Pointer& t)
  * Make indent matching the current tree depth.
  */
 template<typename Comparable>
-void 
+void
 AVL_Tree_Node<Comparable>::
 indent(ostream& os, int level)
 {
@@ -426,8 +523,8 @@ void
 AVL_Tree<Comparable>::
 remove(const Comparable& x)
 {
-  throw AVL_Tree_error("remove: ska implementeras!");
-} 
+  Node::remove(x, root);
+}
 
 /**
  * Check if tree contains x.
