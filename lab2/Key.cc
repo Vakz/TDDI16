@@ -17,8 +17,8 @@ Key KEYsubsetsum(const Key& k, const Key T[N])  {
   for (int i{0}; i < N; ++i)
     if (KEYbit(k, i)) {
       sum = sum + T[i];
-      cout << setw(2) << i << " "; // for debugging
-      cout << T[i] << endl;        // for debugging
+      // cout << setw(2) << i << " "; // for debugging
+      // cout << T[i] << endl;        // for debugging
     }
   return sum;
 }
@@ -119,14 +119,15 @@ Key operator-(const Key& lhs, const Key& rhs)
   // if lhs < rhs we will have carry == -1 after the for loop
   // but this is ok since we are working mod 2^N
   for (int i{C-1}; i >= 0; --i) {
-    c.digit[i]  = (lhs.digit[i] - rhs.digit[i] + carry) % R;
-    if ((lhs.digit[i] - rhs.digit[i] + carry) < 0)
-      {
-	carry = -1;
-	c.digit[i] += R;
-      }
-    else
+    int t = (int(lhs.digit[i]) - int(rhs.digit[i]) + carry);
+    if (t < 0) {
+      carry = -1;
+      c.digit[i] = (unsigned char)(t + R) % R;
+    }
+    else {
       carry = 0;
+      c.digit[i] = (unsigned char)(t) % R;
+    }
   }
 
   return c;

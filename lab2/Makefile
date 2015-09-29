@@ -1,5 +1,5 @@
 #
-# Makefile för brute force-lösning
+# Makefile för sorteringslösning
 #
 
 CCC	= g++ -std=c++11 
@@ -14,7 +14,7 @@ encrypt: encrypt.cc Key.o
 	$(CCC) $(LFLAGS) -o encrypt encrypt.cc Key.o
 
 Key.o: Key.cc Key.h
-	$(CCC) -c Key.cc
+	$(CCC) -c Key.cc Key.h
 
 clean:
 	@ \rm -rf *.o *.gch core
