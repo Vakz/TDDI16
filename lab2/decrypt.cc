@@ -1,8 +1,9 @@
 #include <iostream>
 #include <chrono>
 #include "Key.h"
-#include <unordered_map>
+#include <map>
 #include <vector>
+#include <utility>
 
 using namespace std;
 
@@ -34,15 +35,19 @@ main(int argc, char* argv[])
 
   auto begin = chrono::high_resolution_clock::now();
 
-  unordered_map<Key, bool[N]> L;
-  for (Key i = {{0}}; i < encrypted) {
-    L[candenc][0] = true;
-    for (int i = 1; i < N; ++i) {
-      L[candenc][i] = L[candenc][i - 1];
-    }
-    ++candenc;
+  Key half;
+  half++;
+  for (int i = 0; i <= N/2; ++i) {
+    half = half + half;
   }
 
+
+
+  map<Key, Key> encrypted_table;
+
+  for (Key i{0}; i < half; ++i) {
+
+  }
 
   auto end = chrono::high_resolution_clock::now();
   cout << "Decryption took "
