@@ -6,16 +6,16 @@
 #include <utility>
 
 using namespace std;
+using KeyMap = map<Key, vector<Key>>;
 
 int
 main(int argc, char* argv[])
 {
   unsigned char buffer[C+1];     // temporary string buffer
-  Key candidate = {{0}};         // a password candidate
   Key encrypted;                 // the encrypted password
-  Key candenc;                   // the encrypted password candidate
   Key zero = {{0}};              // the all zero key
   Key T[N];                      // the table T
+
 
   if (argc != 2)
     {
@@ -35,19 +35,31 @@ main(int argc, char* argv[])
 
   auto begin = chrono::high_resolution_clock::now();
 
-  Key half;
-  half++;
+  Key half_iterator{{0}};
+  half_iterator++;
   for (int i = 0; i <= N/2; ++i) {
-    half = half + half;
+    half_iterator = half_iterator + half_iterator;
   }
 
+  KeyMap encrypted_table;
 
+  Key lower_half{{0}};
+  do {
+    encrypted_table[encrypted - KEYsubsetsum(lower_half, T)].push_back(lower_half);
+    ++lower_half;
+  } while(lower_half <= half_iterator);
 
-  map<Key, Key> encrypted_table;
+  Key higher_half{{0}};
+  do {
+    KeyMap::iterator iterator = encrypted_table.find(KEYsubsetsum(higher_half, T));
+    if (iterator != encrypted_table.end()) {
+      for (Key candidate : iterator->second) {
+        cout << higher_half + candidate << endl;
+      }
+    }
+    higher_half = higher_half + half_iterator;
+  } while (higher_half != zero);
 
-  for (Key i{0}; i < half; ++i) {
-
-  }
 
   auto end = chrono::high_resolution_clock::now();
   cout << "Decryption took "
