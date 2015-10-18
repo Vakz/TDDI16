@@ -231,6 +231,7 @@ remove(const Comparable& x, Node_Pointer& t)
   }
   else
   {
+    // Found node to remove
     Node_Pointer tmp = t;
     if (t->right == nullptr && t->left == nullptr) {
       delete t;
@@ -255,11 +256,12 @@ remove(const Comparable& x, Node_Pointer& t)
     }
   }
 
+  // Right side is higher than the left
   if (t != nullptr)
   {
     if (node_height(t->right) - node_height(t->left) == 2)
     {
-      if (t->right->element > x)
+      if (node_height(t->right->right) - node_height(t->right->left) > 0)
       {
         single_rotate_with_right_child(t);
       }
@@ -270,7 +272,7 @@ remove(const Comparable& x, Node_Pointer& t)
 
     else if (node_height(t->left) - node_height(t->right) == 2)
     {
-      if (x < t->left->element)
+      if (node_height(t->left->left) - node_height(t->left->right) >= 0)
       {
         single_rotate_with_left_child(t);
       }
