@@ -233,10 +233,12 @@ remove(const Comparable& x, Node_Pointer& t)
   {
     // Found node to remove
     Node_Pointer tmp = t;
+    // Is tmp a leaf? Then just delete
     if (t->right == nullptr && t->left == nullptr) {
       delete t;
       t = nullptr;
     }
+    // Does tmp only have one child? If so, move that child up to tmp's place
     else if (t->right == nullptr)
     {
 
@@ -248,6 +250,8 @@ remove(const Comparable& x, Node_Pointer& t)
       t = t->right;
       delete tmp;
     }
+    // None of above was true, tmp must have two children.
+    // Find the smallest child on tmp's right side, and move that up to take tmp's place
     else
     {
       Comparable smallest = find_min(t->right)->element;
@@ -256,9 +260,12 @@ remove(const Comparable& x, Node_Pointer& t)
     }
   }
 
+  // Balance the tree
+
   // Right side is higher than the left
   if (t != nullptr)
   {
+    // Is the height of the right side 2 more than the left?
     if (node_height(t->right) - node_height(t->left) == 2)
     {
       if (node_height(t->right->right) - node_height(t->right->left) > 0)
@@ -269,7 +276,7 @@ remove(const Comparable& x, Node_Pointer& t)
         double_rotate_with_right_child(t);
       }
     }
-
+    // Is the height of the left side more than 2 than the right?
     else if (node_height(t->left) - node_height(t->right) == 2)
     {
       if (node_height(t->left->left) - node_height(t->left->right) >= 0)
