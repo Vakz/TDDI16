@@ -50,10 +50,14 @@ public:
    * Find the smallest item in the priority queue.
    * Return the smallest item, or throw min_pq_error if empty.
    */
-  const Comparable & findMin() const
+  const Comparable & findMin()
   {
+
     if(isEmpty())
       throw min_pq_error("findMin: tom heap");
+
+    if (!orderOK)
+      fixHeap();
     return array[1];
   }
 
@@ -78,8 +82,9 @@ public:
    */
   void toss(const Comparable & x)
   {
-    array[currentSize++] = x;
-    orderOK = currentSize == 1 || array.at(currentSize/2 - (currentSize-1) % 2) > x;
+    checkSize();
+    array[++currentSize] = x;
+    orderOK = array.at(currentSize/2) >= x;
   }
 
   /**

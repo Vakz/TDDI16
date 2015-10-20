@@ -20,7 +20,7 @@ simulate(double limit)
     {
       predict(&particles[i], limit);
     }
-  pq.insert(Event(0.0, 0, 0));        // redraw event
+  pq.toss(Event(0.0, 0, 0));        // redraw event
 
   // the main event-driven simulation loop
   while (!pq.isEmpty() && !quit) {
@@ -67,15 +67,15 @@ predict(Particle* a, double limit)
       double dt = a->timeToHit(particles[i]);
       if (t + dt <= limit)
 	{
-	  pq.insert(Event(t + dt, a, &particles[i]));
+	  pq.toss(Event(t + dt, a, &particles[i]));
 	}
     }
 
   // particle-wall collisions
   double dtX = a->timeToHitVerticalWall();
   double dtY = a->timeToHitHorizontalWall();
-  if (t + dtX <= limit) pq.insert(Event(t + dtX, a, 0));
-  if (t + dtY <= limit) pq.insert(Event(t + dtY, 0, a));
+  if (t + dtX <= limit) pq.toss(Event(t + dtX, a, 0));
+  if (t + dtY <= limit) pq.toss(Event(t + dtY, 0, a));
 }
 
 /**
@@ -97,7 +97,7 @@ redraw(double limit)
   SDL_Delay(20); // pause for 20 milliseconds
   if (t < limit)
     {
-      pq.insert(Event(t + 1.0 / hz, 0, 0));
+      pq.toss(Event(t + 1.0 / hz, 0, 0));
     }
 }
 
