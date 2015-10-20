@@ -84,7 +84,7 @@ public:
   {
     checkSize();
     array[++currentSize] = x;
-    orderOK = array.at(currentSize/2) >= x;
+    orderOK = orderOK && array.at(currentSize/2) <= x;
   }
 
   /**
