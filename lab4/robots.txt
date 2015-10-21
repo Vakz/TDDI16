@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /bin/
+Disallow: /idi/
+Disallow: /meetomatic/
+Disallow: /mrbs/
+Disallow: /zope/
+Disallow: /labs/kplab/teaching/java-sum/
+Disallow: /~TDDB84/moodle/
+Disallow: /~TDDB89/books/
+Disallow: /~TDDC17/sw/
+Disallow: /department/location/location
+
