@@ -101,14 +101,14 @@ main(int argc, char* argv[])
   for (int i{0} ; i < N-3 ; ++i) {
     for (int j{i+1} ; j < N-2 ; ++j) {
       for (int k{j+1} ; k < N-1 ; ++k) {
-  	//only consider fourth point if first three are collinear
-  	if (points.at(i).slopeTo(points.at(j)) == points.at(i).slopeTo(points.at(k))) {
-  	  for (int m{k+1} ; m < N ; ++m) {
-  	    if (points.at(i).slopeTo(points.at(j)) == points.at(i).slopeTo(points.at(m))) {
-  	      render_line(screen, points.at(i), points.at(m));
+  	    //only consider fourth point if first three are collinear
+        if (points.at(i).slopeTo(points.at(j)) == points.at(i).slopeTo(points.at(k))) {
+  	      for (int m{k+1} ; m < N ; ++m) {
+  	         if (points.at(i).slopeTo(points.at(j)) == points.at(i).slopeTo(points.at(m))) {
+  	            render_line(screen, points.at(i), points.at(m));
+  	         }
+  	      }
   	    }
-  	  }
-  	}
       }
     }
   }
