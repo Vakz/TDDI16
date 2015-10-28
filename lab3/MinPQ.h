@@ -71,8 +71,10 @@ public:
 
     // Percolate up
     int hole = ++currentSize;
-    for( ; hole > 1 && x < array[hole / 2]; hole /= 2)
-      array[hole] = array[hole / 2];
+    if (orderOK) {
+      for( ; hole > 1 && x < array[hole / 2]; hole /= 2)
+        array[hole] = array[hole / 2];
+    }
     array[hole] = x;
   }
 
